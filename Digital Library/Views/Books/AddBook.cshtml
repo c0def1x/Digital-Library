@@ -1,0 +1,48 @@
+﻿@model BookViewModel
+
+<link rel="stylesheet" href="~/styles/addBook.css" />
+
+<div class="book-form">
+    <form method="post" enctype="multipart/form-data" class="form">
+        <h1 class="header">Добавление книги </h1>
+        <div class="form-element">
+            <label asp-for="Title"></label>
+            <input asp-for="Title" class="input" />
+        </div>
+        <div class="form-element">
+            <label asp-for="Author"></label>
+            <input asp-for="Author" class="input" />
+        </div>
+        <div class="form-element">
+            <label asp-for="Description"></label>
+            <input asp-for="Description" class="bigInput" />
+        </div>
+        <div class="form-element">
+            <label asp-for="PageCount"></label>
+            <input asp-for="PageCount" class="input" />
+        </div>
+        <div class="form-element">
+            <label asp-for="CategoryId"></label>
+            <select asp-for="CategoryId" asp-items="Model.Categories" class="input"></select>
+        </div>
+        <div class="form-element">
+            <label asp-for="Photo"></label>
+            <input asp-for="Photo" accept=".png" />
+        </div>
+        <div class="form-element">
+            <label asp-for="File"></label>
+            <input asp-for="File" accept=".pdf" />
+        </div>
+        <input type="submit" value="Сохранить" class="button" />
+        <input type="button" id="backButton" value="Назад" class="button" />
+    </form>
+</div>
+
+<script>
+    // получаем кнопку по ее селектору CSS
+    let backButton = document.querySelector('#backButton');
+    // добавляем обработчик события
+    backButton.onclick = () => {
+        window.location = "/books/index";
+    };
+</script>

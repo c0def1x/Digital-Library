@@ -1,0 +1,31 @@
+﻿@model LoginViewModel
+@{
+    Layout = null;
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="~/styles/login.css" />
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="content">
+            <form method="post">
+                <h1>Электронная библиотека</h1>
+                <h2>Вход в систему</h2>
+                <label asp-for="Username">Имя пользователя:</label>
+                <input asp-for="Username" />
+                <label asp-for="Password">Пароль:</label>
+                <input asp-for="Password" />
+                <p>Или вы можете <a asp-controller="User" asp-action="Registration">зарегистрироваться</a></p>
+                <div asp-validation-summary="All" class="error-messages"></div>
+                <input type="submit" value="Вход в систему" />
+            </form>
+        </div>
+        <div class="side-image">
+        </div>
+    </div>
+</body>
+</html>

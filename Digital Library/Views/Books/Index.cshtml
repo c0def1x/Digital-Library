@@ -1,0 +1,63 @@
+﻿@using Digital_Library.Domain.Entities;
+@model BooksCatalogViewModel
+
+<link rel="stylesheet" href="~/styles/booksCatalog.css" />
+
+<div class="books-container">
+    <div class="categories-list">
+        <ul>
+            @foreach (Category category in Model.Categories)
+            {
+                <li>
+                    <a asp-controller="Books" asp-action="Index" asp-route-categoryId="@category.Id">
+                        @category.Name
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <div class="books-list">
+        <div class="link-addBook">
+            <a asp-controller="Books" asp-action="AddBook">
+                Добавить книгу
+            </a>
+        </div>
+        <div class="searchbar">
+            <form>
+                <label>Найти книгу: </label>
+                <input type="text" name="searchstring" />
+                <input type="submit" />
+            </form>
+        </div>
+        @foreach (Book book in Model.Books)
+        {
+            <div class="book-card">
+                <div class="book-card-left">
+                    <div class="image-container">
+                        <img src="/images/books/@book.ImageUrl">
+                    </div>
+                    @if (User.IsInRole("admin"))
+                    {
+                        <div class="book-card-actions">
+                            <a class="link-button"
+                               asp-action="UpdateBook"
+                               asp-controller="Books"
+                               asp-route-bookId="@book.Id">
+                                Изменить
+                            </a>
+                            <a class="link-button" href="#">Удалить</a>
+                        </div>
+                    }
+                </div>
+                <div class="book-card-right">
+                    <h2>@book.Title</h2>
+                    <h3>@book.Author</h3>
+                    <p>@book.Description</p>
+                    <div class="placeholder-div"></div>
+                    <a class="link-button" download href="/books/@book.Filename">Скачать</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

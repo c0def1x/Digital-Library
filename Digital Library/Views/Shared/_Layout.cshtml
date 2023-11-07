@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="~/styles/main.css" />
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <div class="wrapper-center">
+        <!--ШАПКА-->
+        <header>
+            <nav>
+                <div class="brand">
+                    <a asp-controller="books" asp-action="index">
+                        <h1>Электронная библиотека</h1>
+                    </a>
+                </div>
+                <div class="links">
+                    <ul>
+                        <li><a href="#">Личный кабинет</a></li>
+                        <li>
+                            <a asp-controller="User" asp-action="Logout">Выход</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!--ОСНОВНАЯ ЧАСТЬ-->
+        <main>
+            <div class="content">
+                @RenderBody()
+            </div>
+        </main>
+        <!--ПОДВАЛ-->
+        <footer>
+            <p>Разработано <a href="http://ects.ru">ects</a> в 2023 году</p>
+        </footer>
+    </div>
+</body>
+</html>
