@@ -1,0 +1,29 @@
+﻿@using Digital_Library.Domain.Entities;
+@model Book
+
+<h1>Удаление книги</h1>
+
+<link rel="stylesheet" href="~/styles/deleteBook.css" />
+
+<div class="book-card">
+    <div class="book-card-left">
+        <div class="image-container">
+            <img src="/images/books/@Model.ImageUrl">
+        </div>
+        <p>Вы уверены, что хотите удалить книгу?</p>
+        @if (User.IsInRole("admin"))
+        {
+            <form method="post" class="book-card-actions" asp-controller="Books" asp-action="DeleteBookPost">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <div asp-validation-summary="All" class="error-messages"></div>
+                <input type="submit"  value="Удалить"/>
+            </form>
+        }
+    </div>
+    <div class="book-card-right">
+        <h2>@Model.Title</h2>
+        <h3>@Model.Author</h3>
+        <p>@Model.Description</p>
+        <div class="placeholder-div"></div>
+    </div>
+</div>

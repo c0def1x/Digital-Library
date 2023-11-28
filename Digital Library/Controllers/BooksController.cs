@@ -1,11 +1,9 @@
 ﻿using Digital_Library.Domain.Entities;
 using Digital_Library.Domain.Services;
-using Digital_Library.Infrastructure;
 using Digital_Library.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Reflection.PortableExecutable;
 
 namespace Digital_Library.Controllers
 {
@@ -14,17 +12,20 @@ namespace Digital_Library.Controllers
         private readonly IBooksReader _reader;
         private readonly IBooksService _booksService;
         private readonly IWebHostEnvironment _appEnvironment;
+        private readonly ILogger<BooksController> _logger;
 
-        public BooksController (IBooksReader reader, IBooksService booksService, IWebHostEnvironment appEnvironment)
+        public BooksController (IBooksReader reader, IBooksService booksService, IWebHostEnvironment appEnvironment, ILogger<BooksController> logger)
         {
             _reader = reader;
             _booksService = booksService;
             _appEnvironment = appEnvironment;
+            _logger = logger;
         }
 
         [Authorize]
         public async Task<IActionResult> Index (string searchString = "", int categoryId = 0)
         {
+            _logger.LogInformation("[{0}] Get books", DateTime.Now);
             var viewModel = new BooksCatalogViewModel
             {
                 Books = await _reader.FindBooksAsync(searchString, categoryId),
@@ -81,10 +82,12 @@ namespace Digital_Library.Controllers
                 await _booksService.AddBook(book);
             } catch (IOException)
             {
+                _logger.LogError("Add:Save file error");
                 ModelState.AddModelError("ioerror", "Не удалось сохранить файл.");
                 return View(bookVm);
             } catch
             {
+                _logger.LogError("Add:Save file in database error");
                 ModelState.AddModelError("database", "Ошибка при сохранении в базу данных.");
                 return View(bookVm);
             }
@@ -168,14 +171,52 @@ namespace Digital_Library.Controllers
                 await _booksService.UpdateBook(book);
             } catch (IOException)
             {
+                _logger.LogError("Update:Save file error");
                 ModelState.AddModelError("ioerror", "Не удалось сохранить файл.");
                 return View(bookVm);
             } catch
             {
+                _logger.LogError("Update:Save file in database error");
                 ModelState.AddModelError("database", "Ошибка при сохранении в базу данных.");
                 return View(bookVm);
             }
 
+            return RedirectToAction("Index", "Books");
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> DeleteBook (int bookId)
+        {
+            var book = await _reader.FindBookAsync(bookId);
+            if (book is null)
+            {
+                return NotFound();
+            }
+            return View(book);
+        }
+
+        [HttpPost("DeleteBook")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> DeleteBookPost (int id)
+        {
+            var book = await _reader.FindBookAsync(id);
+            try
+            {
+                await _booksService.DeleteBook(book);
+            }
+            catch (IOException)
+            {
+                _logger.LogError("Delete file error");
+                ModelState.AddModelError("ioerror", "Не удалось удалить файл.");
+                return View(book);
+            }
+            catch
+            {
+                _logger.LogError("Delete from database error");
+                ModelState.AddModelError("database", "Ошибка при удалении из базы данных.");
+                return View(book);
+            }
             return RedirectToAction("Index", "Books");
         }
     }

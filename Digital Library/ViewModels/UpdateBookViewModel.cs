@@ -7,7 +7,6 @@ namespace Digital_Library.ViewModels
     {
         public int Id { get; set; }
 
-
         [MinLength(2)]
         [MaxLength(150)]
         [Display(Name = "Название книги")]

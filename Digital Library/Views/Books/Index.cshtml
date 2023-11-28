@@ -18,16 +18,17 @@
     </div>
 
     <div class="books-list">
-        <div class="link-addBook">
-            <a asp-controller="Books" asp-action="AddBook">
-                Добавить книгу
-            </a>
-        </div>
+        @if (User.IsInRole("admin"))
+        {
+            <div>
+                <a class="link-button" asp-controller="Books" asp-action="AddBook">Добавить книгу</a>
+            </div>
+        }
         <div class="searchbar">
-            <form>
+            <form class="searchform">
                 <label>Найти книгу: </label>
-                <input type="text" name="searchstring" />
-                <input type="submit" />
+                <input type="text" name="searchstring" placeholder="Укажите название или автора" class="searchinput"/>
+                <input type="submit" value="Найти" class="searchbutton"/>
             </form>
         </div>
         @foreach (Book book in Model.Books)
@@ -46,7 +47,10 @@
                                asp-route-bookId="@book.Id">
                                 Изменить
                             </a>
-                            <a class="link-button" href="#">Удалить</a>
+                            <a class="link-button" 
+                               asp-action="DeleteBook"
+                               asp-controller="Books"
+                               asp-route-bookId="@book.Id">Удалить</a>
                         </div>
                     }
                 </div>

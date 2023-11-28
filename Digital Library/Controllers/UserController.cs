@@ -14,10 +14,12 @@ namespace Digital_Library.Controllers
         private readonly IUserService _userService;
         private const int _adminRoleId = 2;
         private const int _clientRoleId = 1;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController (IUserService userService)
+        public UserController (IUserService userService, ILogger<UserController> logger)
         {
             _userService = userService;
+            _logger = logger;
         }
 
         public IActionResult Login ()
@@ -41,6 +43,7 @@ namespace Digital_Library.Controllers
             }
             else
             {
+                _logger.LogError("User not found");
                 ModelState.AddModelError("user_null", "Пользователь не найден");
                 return View(loginViewModel);
             }
@@ -63,6 +66,7 @@ namespace Digital_Library.Controllers
 
             if (await _userService.IsUserExistsAsync(registration.Username))
             {
+                _logger.LogError("User name not exist");
                 ModelState.AddModelError("user_exists", $"Имя пользователя {registration.Username} уже существует!");
                 return View(registration);
             }
@@ -74,6 +78,7 @@ namespace Digital_Library.Controllers
                 return RedirectToAction("RegistrationSuccess", "User");
             } catch
             {
+                _logger.LogError("Registratin failed, try later");
                 ModelState.AddModelError("reg_error", $"Не удалось зарегистрироваться, попробуйте попытку регистрации позже");
                 return View(registration);
             }

@@ -98,6 +98,30 @@
     justify-content: space-evenly;
 }
 
-.link-addBook{
+.link-addBook {
+    text-decoration: none;
+}
 
+.searchform {
+    background-color: #0C1648;
+    width: 810px;
+    margin: 1em;
+    padding: 1em;
+    border-radius: 10px;
+}
+
+label{
+    color: white;
+}
+
+searchinput, searchinput {
+    border-radius: 10px;
+}
+
+.searchinput{
+    width: 500px;
+}
+
+.searchinput {
+    width: 100px;
 }
